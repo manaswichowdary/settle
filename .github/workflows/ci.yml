@@ -14,4 +14,6 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
+      - name: Let Testcontainers talk to the newer Docker on the runner
+        run: echo "api.version=1.44" > ~/.docker-java.properties
       - run: mvn -B verify
