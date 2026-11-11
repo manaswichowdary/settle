@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: settle
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/settle}
+    username: ${DB_USER:settle}
+    password: ${DB_PASSWORD:settle}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9094}
+    producer:
+      acks: all
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: ledger
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        session.timeout.ms: 10000
+        heartbeat.interval.ms: 3000
+    listener:
+      ack-mode: record
+
+settle:
+  topic: payments
+  relay:
+    enabled: ${SETTLE_RELAY_ENABLED:true}
+    interval-ms: 100
+  consumer:
+    enabled: ${SETTLE_CONSUMER_ENABLED:true}
+    concurrency: 2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics
+
+server:
+  shutdown: immediate
